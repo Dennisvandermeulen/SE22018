@@ -1,5 +1,7 @@
 #!/bin/python3
 
+# If the user enters a query this file will check whether the current machine needs to look up the entered query
+
 import sqlite3
 from os import listdir
 
