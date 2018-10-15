@@ -18,5 +18,14 @@
         </library>
       </libraries>
     </data-source>
+    <data-source source="LOCAL" name="Wordlist" uuid="e6d0c742-a470-46d8-8f46-9afbf9252366">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/docker/Wordlist.db</jdbc-url>
+      <driver-properties>
+        <property name="enable_load_extension" value="true" />
+      </driver-properties>
+    </data-source>
   </component>
 </project>
