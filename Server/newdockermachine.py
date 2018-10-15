@@ -17,8 +17,6 @@ c = conn.cursor()
 #####################################################
 
 # Check of cstate 0 is (poort beschikbaar, container nog actief)
-
-# TODO: toevoegen cstate 0
 c.execute("""SELECT cport FROM containers WHERE cstate = 0""")
 state0 = c.fetchall()
 if len(state0) > 0:
