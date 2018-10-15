@@ -19,11 +19,17 @@ c = conn.cursor()
 # Check of cstate 0 is (poort beschikbaar, container nog actief)
 
 # TODO: toevoegen cstate 0
+c.execute("""SELECT cport FROM containers WHERE cstate = 0""")
+state0 = c.fetchall()
+if len(state0) > 0:
+    c.execute("""SELECT * FROM containers  WHERE cstate=0 ORDER BY cport LIMIT 1 """)
+    newport = c.fetchone()[0]
+    c.execute("""UPDATE containers SET cstate = ? WHERE cport = ?""", (1, newport))
 
 # Check of cstate 2 is (poort beschikbaar, container uitgeschakeld, al in database)
-
-c.execute("""SELECT * FROM containers  WHERE cstate=2 ORDER BY cport""")
-statetwo = c.fetchall()
+else:
+    c.execute("""SELECT * FROM containers  WHERE cstate=2 ORDER BY cport""")
+    statetwo = c.fetchall()
 
 # Als alle tussenliggende poorten in gebruik zijn voegen we een nieuwe entry toe aan de database met het laatste poortnummer +1
 if len(statetwo) is 0:
