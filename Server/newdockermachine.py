@@ -18,8 +18,8 @@ c = conn.cursor()
 
 # Check of cstate 0 is (poort beschikbaar, container nog actief)
 c.execute("""SELECT cport FROM containers WHERE cstate = 0""")
-state0 = c.fetchall()
-if len(state0) > 0:
+statezero = c.fetchall()
+if len(statezero) > 0:
     c.execute("""SELECT * FROM containers  WHERE cstate=0 ORDER BY cport LIMIT 1 """)
     newport = c.fetchone()[0]
     c.execute("""UPDATE containers SET cstate = ? WHERE cport = ?""", (1, newport))
@@ -30,17 +30,17 @@ else:
     statetwo = c.fetchall()
 
 # Als alle tussenliggende poorten in gebruik zijn voegen we een nieuwe entry toe aan de database met het laatste poortnummer +1
-if len(statetwo) is 0:
-    c.execute("""SELECT cport FROM containers ORDER BY cport DESC LIMIT 1""")
-    oldport = c.fetchone()[0]
-    newport = oldport + 1
-    c.execute("""INSERT INTO containers(cport, cstate) VALUES (?, ?)""", (newport, 1))
+    if len(statetwo) is 0:
+        c.execute("""SELECT cport FROM containers ORDER BY cport DESC LIMIT 1""")
+        oldport = c.fetchone()[0]
+        newport = oldport + 1
+        c.execute("""INSERT INTO containers(cport, cstate) VALUES (?, ?)""", (newport, 1))
 
 # Als er ergens een ruimte is in de tussenliggende poorten gebruiken we die
-else :
-    c.execute("""SELECT * FROM containers  WHERE cstate=2 ORDER BY cport LIMIT 1 """)
-    newport = c.fetchone()[0]
-    c.execute("""UPDATE containers SET cstate = ? WHERE cport = ?""", (1, newport))
+    else :
+        c.execute("""SELECT * FROM containers  WHERE cstate=2 ORDER BY cport LIMIT 1 """)
+        newport = c.fetchone()[0]
+        c.execute("""UPDATE containers SET cstate = ? WHERE cport = ?""", (1, newport))
 
 print("De poort voor de machine is " + str(newport))
 
