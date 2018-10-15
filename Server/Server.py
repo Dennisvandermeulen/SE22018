@@ -15,8 +15,10 @@ class Totaldocuments(Resource):
         conn = e.connect()
         # Perform query and return JSON data
         query = conn.execute("SELECT cdocs FROM containers")
-        docsquery = query.cursor.fetchall()
 
+
+        docsquery = query.cursor.fetchall()
+        print(docsquery)
 
         # return {'Total Documents': [i[0] for i in query.cursor.fetchall()]}
 
