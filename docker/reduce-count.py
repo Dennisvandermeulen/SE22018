@@ -1,0 +1,7 @@
+#!/bin/python3
+
+# TODO: haal uit de database van de huidige container op hoe vaak de variabele bestaat
+
+# TODO: voeg toe aan de variabele (Lijst of int)?????????????????????????
+
+# TODO: geef opdracht door aan het volgende poortnummer
