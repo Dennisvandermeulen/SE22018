@@ -1,11 +1,24 @@
 #!/bin/python3
 
+import sqlite3
 
-sumcontainer = 2 # TODO: som van voorgaande containers
-nextcontainer = 102 # TODO: huidig containernummer + 1 (misschien array met alle beschikbare nummers)
+conn = sqlite3.connect('Wordlist.db')
+c = conn.cursor()
 
-# TODO: haal uit de database van de huidige container op hoe vaak de variabele bestaat
+searchterm = "hallo" # TODO: zoekterm doorgeven vanuit CoCo
+totalcount = 2  # TODO: som van voorgaande containers
+containerlist = [101, 102, 103, 104, 106, 110, 125]  # TODO: Array met containers die nog moeten
 
-# TODO: voeg toe aan de variabele (Lijst of int)?????????????????????????
+# Haal het resultaat op dat gevonden is in checkterm.py
 
-# TODO: geef opdracht door aan het volgende poortnummer
+c.execute("""SELECT quantity FROM wordlist WHERE term = ?""", (searchterm, ))
+quantity = c.fetchone()[0]
+
+# Tel de variabele op bij de huidige totalcount
+
+totalcount = totalcount + quantity
+
+# Geef door aan volgende container
+containerlist.pop(0)
+
+# TODO: geef variabele door
