@@ -1,5 +1,6 @@
 from flask import Flask, jsonify, request
 import sqlite3
+import requests
 
 app = Flask(__name__)
 
@@ -59,6 +60,17 @@ def count(query):
     conn = sqlite3.connect('Containers.db')
     c = conn.cursor()
     c.execute("""SELECT * FROM containers""")
+    allcontainers = c.fetchall()
+    ports = [x[0] for x in allcontainers]
+    for i in ports:
+        url = '127.0.0.1:'+ str(ports[i]) + '/count/' + str(query)
+        counted = requests.post(url)
+    containerports = str([num[0] for num in allcontainers][0])
+    url = '127.0.0.1:' + str() + '/reduce-count/' + str(query)
+    response = requests.get(url)
+    return response
+
+
     return jsonify()
 
 
