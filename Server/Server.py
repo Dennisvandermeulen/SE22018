@@ -1,40 +1,71 @@
-from flask import Flask, request
-from flask_restful import Resource, Api
-from sqlalchemy import create_engine
-from json import dumps
-
-e = create_engine('sqlite:///containers.db')
+from flask import Flask, jsonify, request
+import sqlite3
 
 app = Flask(__name__)
-api = Api(app)
+
+@app.route('/workers/idle', methods=['get'])
+def idleworkers():
+    conn = sqlite3.connect('Containers.db')
+    c = conn.cursor()
+    c.execute("""SELECT * FROM containers""")
+    allworkers = c.fetchall()
+    print(allworkers)
+    idleworkers = [num for num in allworkers if num[1] == 0]
+    countidleworkers = len(idleworkers)
+    return jsonify(countidleworkers)
 
 
-class Totaldocuments(Resource):
-    def get(self):
-        # Connect to databse
-        conn = e.connect()
-        # Perform query and return JSON data
-        query = conn.execute("SELECT cdocs FROM containers")
+@app.route('/workers/total', methods=['get'])
+def totalworkers():
+    conn = sqlite3.connect('Containers.db')
+    c = conn.cursor()
+    c.execute("""SELECT * FROM containers""")
+    allworkers = c.fetchall()
+    print(allworkers)
+    totalworkers = [num for num in allworkers if num[1] == 0 or num[1] == 1]
+    counttotalworkers = len(totalworkers)
+    return jsonify(counttotalworkers)
 
 
-        docsquery = query.cursor.fetchall()
-        print(docsquery)
-
-        # return {'Total Documents': [i[0] for i in query.cursor.fetchall()]}
-
-
-class Departmental_Salary(Resource):
-    def get(self, department_name):
-        conn = e.connect()
-        query = conn.execute("select * from salaries where Department='%s'" % department_name.upper())
-        # Query the result and get cursor.Dumping that data to a JSON is looked by extension
-        result = {'data': [dict(zip(tuple(query.keys()), i)) for i in query.cursor]}
-        return result
-        # We can have PUT,DELETE,POST here. But in our API GET implementation is sufficient
+@app.route('/documents/total', methods=['get'])
+def totaldocuments():
+    conn = sqlite3.connect('Containers.db')
+    c = conn.cursor()
+    c.execute("""SELECT * FROM containers""")
+    alldocuments = c.fetchall()
+    print(alldocuments)
+    totaldocs = sum(num[2] for num in alldocuments)
+    return jsonify(totaldocs)
 
 
-api.add_resource(Departmental_Salary, '/dept/<string:department_name>')
-api.add_resource(Departments_Meta, '/departments')
+@app.route('/documents/servers', methods=['get'])
+def documents():
+    conn = sqlite3.connect('Containers.db')
+    c = conn.cursor()
+    c.execute("""SELECT * FROM containers""")
+    alldocuments = c.fetchall()
+    print(alldocuments)
+    serverdocs = [[num[0], num[2]] for num in alldocuments]
+    return jsonify(serverdocs)
+
+
+@app.route('/documents/upload', methods=['post'])
+def uploaddocuments():
+    return jsonify()
+
+
+@app.route('/count/<string:query>', methods=['get'])
+def count(query):
+    conn = sqlite3.connect('Containers.db')
+    c = conn.cursor()
+    c.execute("""SELECT * FROM containers""")
+    return jsonify()
+
+
+@app.route('/find/<string:query>/<int:amount>', methods=['get'])
+def find(query, amount):
+    return jsonify()
+
 
 if __name__ == '__main__':
     app.run()
