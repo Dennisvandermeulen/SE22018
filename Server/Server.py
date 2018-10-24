@@ -62,21 +62,21 @@ def count(query):
     c.execute("""SELECT * FROM containers""")
     allcontainers = c.fetchall()
     ports = [x[0] for x in allcontainers]
-    for i in ports:
-        url = '127.0.0.1:'+ str(ports[i]) + '/count/' + str(query)
+    print(ports)
+    for i in range(len(ports)):
+        print(ports[i])
+        url = 'http://127.0.0.1:' + str(ports[i]) + '/count/' + str(query)
         counted = requests.post(url)
-    containerports = str([num[0] for num in allcontainers][0])
-    url = '127.0.0.1:' + str() + '/reduce-count/' + str(query)
+        print(counted.text)
+    url = 'http://127.0.0.1:5001/reduce-count/' + str(query)
     response = requests.get(url)
-    return response
 
-
-    return jsonify()
-
+    return 'OK'
 
 @app.route('/find/<string:query>/<int:amount>', methods=['get'])
 def find(query, amount):
     return jsonify()
+
 
 
 if __name__ == '__main__':
