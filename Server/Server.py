@@ -63,20 +63,26 @@ def count(query):
     allcontainers = c.fetchall()
     ports = [x[0] for x in allcontainers]
     print(ports)
-    for i in range(len(ports)):
-        print(ports[i])
-        url = 'http://127.0.0.1:' + str(ports[i]) + '/count/' + str(query)
-        counted = requests.post(url)
-        print(counted.text)
+    for i in [len(ports)-1]:
+        # Last worker receives CoCo port
+        if i == len(ports)-1:
+            url = 'http://127.0.0.1:' + str(ports[i]) + '/count/' + str(query) + '/' + str(5000)
+            counted = requests.post(url)
+            print(counted.text)
+            print("CoCo port given")
+        # Each worker gets the port of the next worker for use in the reduce-count query
+        else:
+            url = 'http://127.0.0.1:' + str(ports[i]) + '/count/' + str(query) + '/' + str(ports[i]+1)
+            counted = requests.post(url)
+            print(counted.text)
     url = 'http://127.0.0.1:5001/reduce-count/' + str(query)
     response = requests.get(url)
+    return response.content
 
-    return 'OK'
 
 @app.route('/find/<string:query>/<int:amount>', methods=['get'])
 def find(query, amount):
     return jsonify()
-
 
 
 if __name__ == '__main__':
